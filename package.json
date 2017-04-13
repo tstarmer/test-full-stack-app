@@ -4,7 +4,7 @@
   "description": "test full stack app",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node server.js --ignore public/",
+    "start": "nodemon server.js --exec babel-node --ignore public/",
     "dev": "webpack -wd"
   },
   "author": "Tim Starmer",
