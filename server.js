@@ -1,11 +1,15 @@
 import config from "./config";
+import apiRouter from "./api";
+
 import express from "express";
-import apiRouter from "./api"
-// import fs from "fs";
 const server = express();
 
+server.set("view engine", "ejs");
+
 server.get('/', (req, res)=>{
-	res.send("hello worlds")
+	res.render('index', {
+		content:"App loading!"
+	} )
 })
 
 server.use("/api", apiRouter)
