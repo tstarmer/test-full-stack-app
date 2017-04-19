@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+
 import Header from './Header';
 
 import ContestPreview from './ContestPreview';
@@ -10,14 +12,23 @@ class App extends React.Component{
 		super();
 		this.state = {
 			pageHeader: "Naming Contests",
-			contests:[]
+			contests:this.props.initialContests
 		}
 	}
 		
 	componentDidMount(){
-		this.setState({
-			contests: data.contests
-		})
+		//ajax ...
+		axios.get('/api/contests')
+			.then(resp => {
+
+				this.setState({
+					contests: resp.data.contests
+				})
+				//console.log(resp.data.contests);
+			})
+			.catch(console.error)
+
+		
 	}
 
 	componentWillUnmount(){
