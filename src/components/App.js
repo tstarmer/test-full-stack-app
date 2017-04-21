@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+
 import Header from './Header';
 
 import ContestPreview from './ContestPreview';
@@ -6,18 +8,31 @@ import ContestPreview from './ContestPreview';
 import data from '../testData';
 
 class App extends React.Component{
-	constructor(){
-		super();
+	constructor(props){ //adding props as an argument works
+		super(props);
+		console.log(this.props)
+		//console.log(this.props.initialContests)//broken here
 		this.state = {
 			pageHeader: "Naming Contests",
-			contests:[]
+			contests:this.props.initialContests// contests as this.props.initialContests comes back undefined not empty array
 		}
 	}
 		
 	componentDidMount(){
-		this.setState({
-			contests: data.contests
-		})
+		//ajax ...
+		console.log(this.props)
+		console.log(this.props.initialContests)//works here
+		axios.get('/api/contests')
+			.then(resp => {
+
+				this.setState({
+					contests: resp.data.contests
+				})
+				//console.log(resp.data.contests);
+			})
+			.catch(console.error)
+
+		
 	}
 
 	componentWillUnmount(){

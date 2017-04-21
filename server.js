@@ -14,22 +14,30 @@ server.use(sassMiddleware({
 
 server.set("view engine", "ejs");
 
+import serverRender from './serverRender';
+
 server.get('/', (req, res)=>{
-	res.render('index', {
-		content:"App loading!"
-	} )
-})
-
-server.use("/api", apiRouter)
-server.use(express.static('public'));//needs extension in route
-
-// server.get("/about", (req,res)=>{
-// 	fs.readFile("./about.html", (err,data)=>{
-// 		res.send(data.toString());
-// 	})
+	serverRender()
+		.then(content => {
+			res.render('index', {
+			content
+		});
+	})
+	.catch(console.error)
 	
+	
+});
+
+// server.get('/', (req, res)=>{
+// 	res.render('index', {
+// 		content:"App loading!"
+// 	} )
 // })
 
-server.listen(config.port, ()=>{
+server.use("/api", apiRouter)
+server.use(express.static('public'));
+
+
+server.listen(config.port, config.host, ()=>{
 	console.info('Express is listening on port', config.port)
 })
