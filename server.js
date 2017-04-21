@@ -28,15 +28,15 @@ server.get('/', (req, res)=>{
 	
 });
 
-server.use("/api", apiRouter)
-server.use(express.static('public'));//needs extension in route
-
-// server.get("/about", (req,res)=>{
-// 	fs.readFile("./about.html", (err,data)=>{
-// 		res.send(data.toString());
-// 	})
-	
+// server.get('/', (req, res)=>{
+// 	res.render('index', {
+// 		content:"App loading!"
+// 	} )
 // })
+
+server.use("/api", apiRouter)
+server.use(express.static('public'));
+
 
 server.listen(config.port, config.host, ()=>{
 	console.info('Express is listening on port', config.port)

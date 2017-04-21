@@ -8,16 +8,20 @@ import ContestPreview from './ContestPreview';
 import data from '../testData';
 
 class App extends React.Component{
-	constructor(){
-		super();
+	constructor(props){ //adding props as an argument works
+		super(props);
+		console.log(this.props)
+		//console.log(this.props.initialContests)//broken here
 		this.state = {
 			pageHeader: "Naming Contests",
-			contests:this.props.initialContests
+			contests:this.props.initialContests// contests as this.props.initialContests comes back undefined not empty array
 		}
 	}
 		
 	componentDidMount(){
 		//ajax ...
+		console.log(this.props)
+		console.log(this.props.initialContests)//works here
 		axios.get('/api/contests')
 			.then(resp => {
 
