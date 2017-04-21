@@ -1,36 +1,33 @@
 import React from 'react';
-import axios from 'axios';
 
 import Header from './Header';
 
-import ContestPreview from './ContestPreview';
+import ContestList from './ContestList';
+import Contest from './Contest'
+
+import * as api from '../api'
+
+const pushState = (obj, url) =>{
+	window.history.pushState(obj,'', url);
+}
+
 
 import data from '../testData';
 
 class App extends React.Component{
 	constructor(props){ //adding props as an argument works
 		super(props);
-		console.log(this.props)
+		// console.log(this.props)
 		//console.log(this.props.initialContests)//broken here
-		this.state = {
-			pageHeader: "Naming Contests",
-			contests:this.props.initialContests// contests as this.props.initialContests comes back undefined not empty array
-		}
+		this.state = this.props.initialData
+		
 	}
 		
 	componentDidMount(){
 		//ajax ...
-		console.log(this.props)
-		console.log(this.props.initialContests)//works here
-		axios.get('/api/contests')
-			.then(resp => {
-
-				this.setState({
-					contests: resp.data.contests
-				})
-				//console.log(resp.data.contests);
-			})
-			.catch(console.error)
+		// console.log(this.props)
+		// console.log(this.props.initialContests)//works here
+		
 
 		
 	}
@@ -40,15 +37,55 @@ class App extends React.Component{
 	}
 
 
+	fetchContest = (contestID) =>{
+		pushState(
+			{ currentContestID: contestID}, 
+			`/contest/${contestID}`
+			);
+		api.fetchContest(contestID).then(contest =>{
+			this.setState({
+			
+			currentContestID: contest.id,
+			contests: {
+				...this.state.contests,
+				[contest.id]:contest
+			}
+		})
+	})
+		
+		
+
+
+	}
+
+	currentContest(){
+		return this.state.contests[this.state.currentContestID]
+	}
+
+	pageHeader(){
+		if(this.state.currentContestID){
+			return this.currentContest().contestName
+		}
+		return 'Naming Contest'
+	}
+
+	currentContent(){
+		if(this.state.currentContestID){
+			return <Contest {...this.currentContest()}/>;
+		}
+		return <ContestList 
+				onContestClick = {this.fetchContest}
+				contests={this.state.contests}/>
+		
+	}
+
 	render(){
 		return(
 			<div className="App">
-				<Header message={this.state.pageHeader}/>
-				<div>
-					{this.state.contests.map(contest =>
-					<ContestPreview key={contest.id} {...contest} />
-					)}
-				</div>
+				<Header message={this.pageHeader()}/>
+				{this.currentContent()}
+				
+
 			</div>
 		);
 	}
